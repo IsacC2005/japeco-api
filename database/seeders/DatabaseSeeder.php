@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,5 +20,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        $path = database_path('seeders/data.sql');
+
+        // 2. Ejecutar el contenido del archivo SQL
+        // file_get_contents() lee todo el contenido del archivo en una cadena.
+        // DB::unprepared() ejecuta la cadena como una consulta SQL "cruda".
+        DB::unprepared(file_get_contents($path));
+
+        // Opcional: Mostrar un mensaje en la consola
+        $this->command->info('Archivo SQL ejecutado correctamente.');
     }
 }
