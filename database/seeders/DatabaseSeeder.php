@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Test User',
@@ -23,12 +22,8 @@ class DatabaseSeeder extends Seeder
 
         $path = database_path('seeders/data.sql');
 
-        // 2. Ejecutar el contenido del archivo SQL
-        // file_get_contents() lee todo el contenido del archivo en una cadena.
-        // DB::unprepared() ejecuta la cadena como una consulta SQL "cruda".
         DB::unprepared(file_get_contents($path));
 
-        // Opcional: Mostrar un mensaje en la consola
         $this->command->info('Archivo SQL ejecutado correctamente.');
     }
 }
