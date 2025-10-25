@@ -15,11 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         $path = database_path('seeders/data.sql');
 
         DB::unprepared(file_get_contents($path));
