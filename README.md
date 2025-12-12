@@ -1,61 +1,68 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Japeco API: Puente de Datos Legacy
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Japeco API** es una interfaz de programación de aplicaciones (API) diseñada con el propósito de actuar como **puente de datos** entre sistemas modernos y una base de datos *legacy* desnormalizada.
 
-## About Laravel
+Este proyecto consume la base de datos de **Japeco**, un sistema de gestión académica antiguo caracterizado por una estructura de datos desnormalizada y código *spaghetti*.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La API no implementa lógica de negocio compleja; su función principal es **exponer y exportar** los datos de esta fuente antigua de manera **limpia, segura y estructurada**, facilitando su consumo por parte de otras aplicaciones modernas (móviles, web, *front-end*, etc.) que requieren acceso a la información académica histórica.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### ⚙️ Arquitectura y Flujo de Datos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+El proyecto Japeco API se sitúa como intermediario, desacoplando la capa de datos *legacy* de las aplicaciones de consumo, garantizando que el sistema antiguo permanezca intocado y estable.
 
-## Learning Laravel
+El flujo de datos se esquematiza de la siguiente manera:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1.  **Consumo:** La Aplicación Moderna solicita datos a Japeco API.
+2.  **Traducción:** Japeco API traduce la solicitud a la sintaxis requerida por la base de datos *legacy* (consultas SQL complejas, etc.).
+3.  **Extracción:** Los datos sin procesar se extraen de la base de datos *legacy*.
+4.  **Estructura y Respuesta:** Japeco API formatea los datos extraídos en un formato JSON limpio y los envía de vuelta a la Aplicación Moderna.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🔑 Endpoints Principales
 
-### Premium Partners
+La API expone los datos de la base de datos *legacy* a través de los siguientes *endpoints*. Todos los *endpoints* utilizan el método **`GET`** y están prefijados con la ruta base de tu API (ej: `https://localhost:8000/api/`).
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### 👩‍🏫 Rutas de Profesores (`/teacher`)
 
-## Contributing
+| Método | Endpoint                  | Descripción                                                          |
+| :----- | :------------------------ | :------------------------------------------------------------------- |
+| `GET`  | `/api/teacher/index`      | Lista todos los profesores registrados.                              |
+| `GET`  | `/api/teacher/show/{id}`  | Retorna los detalles de un profesor específico por su ID.            |
+| `GET`  | `/api/teacher/exist/{id}` | Verifica si un profesor con el ID especificado existe en el sistema. |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+#### 📚 Rutas de Secciones y Años Escolares (`/section`)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Método | Endpoint                                       | Descripción                                                                         |
+| :----- | :--------------------------------------------- | :---------------------------------------------------------------------------------- |
+| `GET`  | `/api/section/index`                           | Lista todas las secciones (grupos o aulas) disponibles.                             |
+| `GET`  | `/api/section/show/{id}`                       | Retorna los detalles de una sección específica por su ID.                           |
+| `GET`  | `/api/section/details`                         | Lista todas las secciones con sus detalles completos.                               |
+| `GET`  | `/api/section/school-year/details`             | Retorna los detalles de todas las secciones relacionadas con el año escolar actual. |
+| `GET`  | `/api/section/assings-teacher/{id}`            | Retorna las secciones asignadas a un profesor específico (por ID de profesor).      |
+| `GET`  | `/api/section/teacher-if-assing`               | Verifica si el profesor autenticado está asignado a alguna sección.                 |
+| `GET`  | `/api/sections/school-year`                    | Retorna todas las secciones asociadas al año escolar actual.                        |
+| `GET`  | `/api/section/find/school-year-and-teacher-id` | Retorna secciones filtradas por el año escolar y el ID del profesor.                |
 
-## Security Vulnerabilities
+#### 🧑‍🎓 Rutas de Estudiantes (`/student`)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Método | Endpoint                       | Descripción                                                                                |
+| :----- | :----------------------------- | :----------------------------------------------------------------------------------------- |
+| `GET`  | `/api/student/index`           | Lista todos los estudiantes inscritos.                                                     |
+| `GET`  | `/api/student/to-section/{id}` | Retorna todos los estudiantes que pertenecen a una sección específica (por ID de sección). |
 
-## License
+#### 🩺 Ruta de Diagnóstico
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Método | Endpoint              | Descripción                                                                                                          |
+| :----- | :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/api/test-conection` | Endpoint de diagnóstico simple para verificar que la API está operativa y la conexión a la base de datos es exitosa. |
+
+---
+
+
+### 🛡️ Consideraciones de Seguridad
+
+* **Solo Lectura:** Por diseño, Japeco API solo implementa métodos `GET` y no permite operaciones de escritura (`POST`, `PUT`, `DELETE`), asegurando la integridad de los datos en la base de datos *legacy*.
